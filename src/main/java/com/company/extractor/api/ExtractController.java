@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 public class ExtractController {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(ExtractController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExtractController.class);
 
     private DtoSorter dtoSorter;
     private ControllerSorter controllerSorter;
