@@ -25,6 +25,8 @@ import static com.company.extractor.utils.StringUtils.removeBrackets;
 @Service
 public class ControllerSorter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ControllerSorter.class);
+    
     private Extractor extractor;
 
     public ControllerSorter(Extractor extractor) {
