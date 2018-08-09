@@ -6,6 +6,8 @@ import com.company.extractor.entity.ControllerAnnotation;
 import com.company.extractor.api.dto.ControllerData;
 import com.company.extractor.entity.ControllerMethods;
 import com.company.extractor.entity.MethodParameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -17,39 +19,38 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.company.extractor.api.ExtractController.LOGGER;
 import static com.company.extractor.entity.ControllerType.*;
 import static com.company.extractor.utils.StringUtils.getAnnotationName;
 import static com.company.extractor.utils.StringUtils.removeBrackets;
 
 @Service
-public class ControllerSorter {
+public class ControllerExtractor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ControllerSorter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ControllerExtractor.class);
     
-    private Extractor extractor;
+    private ApiExtractor extractor;
 
-    public ControllerSorter(Extractor extractor) {
+    public ControllerExtractor(ApiExtractor extractor) {
         this.extractor = extractor;
     }
 
-    public List<Controllers> dynamicSort(String controllerType) {
+    public List<Controllers> extractByType(String controllerType) {
         switch (controllerType) {
             case "post":
-                return mapper(getSeparatedControllers().getPostMethods());
+                return collectByType(getSeparatedControllers().getPostMethods());
             case "get":
-                return mapper(getSeparatedControllers().getGetMethods());
+                return collectByType(getSeparatedControllers().getGetMethods());
             case "patch":
-                return mapper(getSeparatedControllers().getPatchMethods());
+                return collectByType(getSeparatedControllers().getPatchMethods());
             case "put":
-                return mapper(getSeparatedControllers().getPutMethods());
+                return collectByType(getSeparatedControllers().getPutMethods());
             default:
                 LOGGER.error("Тип контроллера не опознан: {}", controllerType);
                 return null;
         }
     }
 
-    private List<Controllers> mapper(List<Method> methodList) {
+    private List<Controllers> collectByType(List<Method> methodList) {
         return methodList.stream()
                 .map(this::buildControllerMethodData)
                 .collect(Collectors.toList())
@@ -129,7 +130,9 @@ public class ControllerSorter {
                     .forEach(c -> Arrays.stream(c.getMethods())
                             .forEach(method -> {
                                 List<Annotation> annotations = Arrays.asList(method.getAnnotations());
-                                if (annotations.toString().contains(methodType)) list.add(method);
+                                if (annotations.toString().contains(methodType)) {
+                                    list.add(method);
+                                }
                             }));
             return list;
         };

@@ -15,18 +15,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class DtoSorter {
+public class DtoExtractor {
 
-    private Extractor extractor;
+    private ApiExtractor extractor;
 
-    public DtoSorter(Extractor extractor) {
+    public DtoExtractor(ApiExtractor extractor) {
         this.extractor = extractor;
     }
 
-    public List<DtoData> sortDtos() {
+    public List<DtoData> extractDtos() {
         return getDtos().stream()
                 .map(this::buildDtoData)
                 .collect(Collectors.toList());
+    }
+
+    private List<Class<?>> getDtos() {
+        return extractor.extract().getDtos();
     }
 
     private DtoData buildDtoData(Class<?> dtoClass) {
@@ -60,9 +64,5 @@ public class DtoSorter {
                 }).collect(Collectors.toList());
 
         return new DtoData(dtoClass.getName(), fieldDataList);
-    }
-
-    private List<Class<?>> getDtos() {
-        return extractor.extract().getDtos();
     }
 }

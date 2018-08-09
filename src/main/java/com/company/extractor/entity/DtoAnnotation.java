@@ -24,20 +24,4 @@ public class DtoAnnotation {
     public void setRequired(Boolean required) {
         this.required = required;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public Long getMin() {
-        return min;
-    }
-
-    public Long getMax() {
-        return max;
-    }
-
-    public Boolean getRequired() {
-        return required;
-    }
 }

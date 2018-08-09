@@ -18,12 +18,4 @@ public class ApiPair {
     public List<Class<?>> getDtos() {
         return dtos;
     }
-
-    public void setControllers(List<Class<?>> controllers) {
-        this.controllers = controllers;
-    }
-
-    public void setDtos(List<Class<?>> dtos) {
-        this.dtos = dtos;
-    }
 }

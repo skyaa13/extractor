@@ -2,8 +2,8 @@ package com.company.extractor.api;
 
 import com.company.extractor.api.dto.Controllers;
 import com.company.extractor.api.dto.DtoData;
-import com.company.extractor.service.DtoSorter;
-import com.company.extractor.service.ControllerSorter;
+import com.company.extractor.service.DtoExtractor;
+import com.company.extractor.service.ControllerExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,11 +18,11 @@ public class ExtractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExtractController.class);
 
-    private DtoSorter dtoSorter;
-    private ControllerSorter controllerSorter;
+    private DtoExtractor dtoSorter;
+    private ControllerExtractor controllerSorter;
 
-    public ExtractController(DtoSorter dtoSorter,
-                             ControllerSorter controllerSorter) {
+    public ExtractController(DtoExtractor dtoSorter,
+                             ControllerExtractor controllerSorter) {
         this.dtoSorter = dtoSorter;
         this.controllerSorter = controllerSorter;
     }
@@ -30,13 +30,13 @@ public class ExtractController {
     @GetMapping(path = "/api-data/dto")
     public List<DtoData> getDtos() {
         LOGGER.info("Запрос получения списка дто");
-        return dtoSorter.sortDtos();
+        return dtoSorter.extractDtos();
     }
 
     @GetMapping(path = "/api-data/ctrl/{method}")
     public List<Controllers> getControllers(@PathVariable String method) {
         LOGGER.info("Запрос получения списка контроллеров: {}", method);
-        return controllerSorter.dynamicSort(method);
+        return controllerSorter.extractByType(method);
     }
 }
 
