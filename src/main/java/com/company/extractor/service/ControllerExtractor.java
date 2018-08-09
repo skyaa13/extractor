@@ -116,14 +116,14 @@ public class ControllerExtractor {
     private ControllerMethods getSeparatedControllers() {
         ApiPair apiPair = extractor.extract();
         ControllerMethods controllers = new ControllerMethods();
-        controllers.setPostMethods(sortByMethodType(POST_MAPPING.getName()).apply(apiPair));
-        controllers.setGetMethods(sortByMethodType(GET_MAPPING.getName()).apply(apiPair));
-        controllers.setPatchMethods(sortByMethodType(PATCH_MAPPING.getName()).apply(apiPair));
-        controllers.setPutMethods(sortByMethodType(PUT_MAPPING.getName()).apply(apiPair));
+        controllers.setPostMethods(getByMethodType(POST_MAPPING.getName()).apply(apiPair));
+        controllers.setGetMethods(getByMethodType(GET_MAPPING.getName()).apply(apiPair));
+        controllers.setPatchMethods(getByMethodType(PATCH_MAPPING.getName()).apply(apiPair));
+        controllers.setPutMethods(getByMethodType(PUT_MAPPING.getName()).apply(apiPair));
         return controllers;
     }
 
-    private Function<ApiPair, List<Method>> sortByMethodType(String methodType) {
+    private Function<ApiPair, List<Method>> getByMethodType(String methodType) {
         return apiPair -> {
             List<Method> list = new ArrayList<>();
             apiPair.getControllers()
