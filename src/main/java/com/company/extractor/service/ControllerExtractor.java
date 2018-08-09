@@ -27,7 +27,7 @@ import static com.company.extractor.utils.StringUtils.removeBrackets;
 public class ControllerExtractor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ControllerExtractor.class);
-    
+
     private ApiExtractor extractor;
 
     public ControllerExtractor(ApiExtractor extractor) {
@@ -127,13 +127,14 @@ public class ControllerExtractor {
         return apiPair -> {
             List<Method> list = new ArrayList<>();
             apiPair.getControllers()
-                    .forEach(c -> Arrays.stream(c.getMethods())
-                            .forEach(method -> {
-                                List<Annotation> annotations = Arrays.asList(method.getAnnotations());
-                                if (annotations.toString().contains(methodType)) {
-                                    list.add(method);
-                                }
-                            }));
+                    .forEach(c -> {
+                        for (Method method : c.getMethods()) {
+                            List<Annotation> annotations = Arrays.asList(method.getAnnotations());
+                            if (annotations.toString().contains(methodType)) {
+                                list.add(method);
+                            }
+                        }
+                    });
             return list;
         };
     }
