@@ -2,13 +2,15 @@ package com.company.extractor.api.dto;
 
 import java.util.List;
 
-public class ApiPair {
+public class ApiData {
     private List<Class<?>> controllers;
     private List<Class<?>> dtos;
+    private List<Class<?>> enums;
 
-    public ApiPair(List<Class<?>> controllers, List<Class<?>> dtos) {
+    public ApiData(List<Class<?>> controllers, List<Class<?>> dtos, List<Class<?>> enums) {
         this.controllers = controllers;
         this.dtos = dtos;
+        this.enums = enums;
     }
 
     public List<Class<?>> getControllers() {
@@ -18,4 +20,6 @@ public class ApiPair {
     public List<Class<?>> getDtos() {
         return dtos;
     }
+
+    public List<Class<?>> getEnums() { return enums; }
 }

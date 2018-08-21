@@ -1,6 +1,6 @@
 package com.company.extractor.service;
 
-import com.company.extractor.api.dto.ApiPair;
+import com.company.extractor.api.dto.ApiData;
 import com.company.extractor.api.dto.Controllers;
 import com.company.extractor.entity.ControllerAnnotation;
 import com.company.extractor.api.dto.ControllerData;
@@ -34,7 +34,7 @@ public class ControllerExtractor {
         this.extractor = extractor;
     }
 
-    public List<Controllers> extractByType(String controllerType) {
+    public List<Controllers> getByType(String controllerType) {
         switch (controllerType) {
             case "post":
                 return collectByType(getSeparatedControllers().getPostMethods());
@@ -114,7 +114,7 @@ public class ControllerExtractor {
     }
 
     private ControllerMethods getSeparatedControllers() {
-        ApiPair apiPair = extractor.extract();
+        ApiData apiPair = extractor.extract();
         ControllerMethods controllers = new ControllerMethods();
         controllers.setPostMethods(sortByMethodType(POST_MAPPING.getName()).apply(apiPair));
         controllers.setGetMethods(sortByMethodType(GET_MAPPING.getName()).apply(apiPair));
@@ -123,7 +123,7 @@ public class ControllerExtractor {
         return controllers;
     }
 
-    private Function<ApiPair, List<Method>> sortByMethodType(String methodType) {
+    private Function<ApiData, List<Method>> sortByMethodType(String methodType) {
         return apiPair -> {
             List<Method> list = new ArrayList<>();
             apiPair.getControllers()

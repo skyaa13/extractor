@@ -1,6 +1,6 @@
 package com.company.extractor.service;
 
-import com.company.extractor.api.dto.ApiPair;
+import com.company.extractor.api.dto.ApiData;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -16,19 +16,24 @@ import java.util.stream.Collectors;
 @Service
 public class ApiExtractor {
 
-    public ApiPair extract() {
+    public ApiData extract() {
         return splitClasses(getClasses(getPathToJar()));
     }
 
-    // adapt to service
-    private ApiPair splitClasses(Set<Class<?>> classes) {
+    private ApiData splitClasses(Set<Class<?>> classes) {
         List<Class<?>> controller = classes.stream()
                 .filter(c -> c.getName().contains("Controller"))
+                .distinct()
                 .collect(Collectors.toList());
         List<Class<?>> dtos = classes.stream()
                 .filter(c -> c.getPackage().getName().contains("dto") & !c.getName().contains("Controller"))
+                .distinct()
                 .collect(Collectors.toList());
-        return new ApiPair(controller, dtos);
+        List<Class<?>> enums = classes.stream()
+                .filter(Class::isEnum)
+                .distinct()
+                .collect(Collectors.toList());
+        return new ApiData(controller, dtos, enums);
     }
 
     private Set<Class<?>> getClasses(String jarFileName) {
@@ -45,7 +50,10 @@ public class ApiExtractor {
             while (entry.hasMoreElements()) {
                 JarEntry jarEntry = (JarEntry) entry.nextElement();
                 String name = jarEntry.getName().replace("/", ".");
-                if (name.contains("api.") && name.endsWith(".class")) {
+                if (name.contains("api.") && name.endsWith(".class")
+                        || name.contains("controller.") && name.endsWith(".class")
+                        || name.contains("dto.") && name.endsWith(".class")
+                        || name.contains("enum") && name.endsWith(".class")) {
                     String str = name.substring(indexOfSpringClassPath);
                     Class c = cl.loadClass(str.substring(0, str.length() - indexOfClassExpansion));
                     classes.add(c);
